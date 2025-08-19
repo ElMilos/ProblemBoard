@@ -6,7 +6,7 @@ public class ByUpdatedTime implements IssueSorting{
 
     @Override
     public int compare(Issue o1, Issue o2) {
-//        if return 1;
+        if (o1.getUpdatedAt().compareTo(o2.getUpdatedAt()) < 0) return 1;
         return 0;
     }
 }
