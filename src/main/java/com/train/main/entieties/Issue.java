@@ -1,11 +1,15 @@
 package com.train.main.entieties;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "issues")
+@Getter
+@Setter
 public class Issue {
 
     @Id
@@ -51,4 +55,6 @@ public class Issue {
         this.assignee = assignee;
         this.createdAt = Instant.now();
     }
+
+
 }
