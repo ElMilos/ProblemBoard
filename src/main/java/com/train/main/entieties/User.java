@@ -29,12 +29,11 @@ public class User {
 
     public User() {}
 
-    public User(String username, String email, String password_hash, String role, Long id) {
+    public User(String username, String email, String password_hash, String role) {
         this.username = username;
         this.email = email;
         this.password_hash = password_hash;
         this.role = role;
-        this.id = id;
         this.createdAt = Instant.now();
     }
 
