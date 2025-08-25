@@ -8,14 +8,16 @@ import com.train.main.mappers.IssueMapper;
 import com.train.main.service.IssueService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,7 +40,13 @@ public class IssueController {
                                @RequestParam Optional<IssueStatus> status,
                                @RequestParam Optional<IssuePriority> priority,
                                @RequestParam Optional<Long> assignee,
-                               @PageableDefault(size=20, sort="updatedAt", direction = Sort.Direction.DESC) Pageable pageable){
-        return issueService.list(pid, status, priority, assignee, pageable).map(issueMapper::toDto);
+                               @PageableDefault(size=20, sort="updatedAt", direction = Sort.Direction.DESC) Pageable pageable)
+    {
+        List<IssueDTO> dtos = issueService.getList(pid, status, priority, assignee, pageable)
+                .stream()
+                .map(issueMapper::toDto)
+                .toList();
+
+        return new PageImpl<>(dtos, pageable, dtos.size());
     }
 }
