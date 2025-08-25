@@ -1,10 +1,12 @@
 package com.train.main.entieties;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.Instant;
 
 @Entity
+@Getter
 @Table(name="users")
 public class User {
 

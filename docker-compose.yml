@@ -2,12 +2,13 @@ services:
   db:
     image: postgres:16
     environment:
-      postgres_DB: Pg_db
-      postgres_USER: dev
-      postgres_PASSWORD: dev
-    ports: ["5432:5432"]
+      POSTGRES_DB: pgdb
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+    ports:
+      - "5432:5432"        # lub "5433:5432" jeśli konflikt
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dev -d Pg_db" ]
+      test: ["CMD-SHELL", "pg_isready -U dev -d pgdb"]
       interval: 5s
       timeout: 3s
       retries: 10
