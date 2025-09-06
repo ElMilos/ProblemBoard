@@ -1,0 +1,157 @@
+<div class="container-fluid py-3" *ngIf="loaded(); else needLogin">
+  <div class="row g-3">
+    <!-- Projects -->
+    <section class="col-12 col-lg-3">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between">
+          <span class="fw-semibold">Projects</span>
+          <button class="btn btn-sm btn-outline-secondary" (click)="loadProjects()">⟳</button>
+        </div>
+        <div class="list-group list-group-flush">
+          <button
+            *ngFor="let p of projects()"
+            class="list-group-item list-group-item-action"
+            [class.active]="p.id === projectId()"
+            (click)="selectProject(p)"
+          >
+            {{ p.name }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="card shadow-sm">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Id</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Assignee</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i of issues()">
+              <td>{{ i.id }}</td>
+              <td>
+                <a role="button" (click)="openIssue(i)">{{ i.title }}</a>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="statusClass(i.status)">{{ i.status }}</span>
+              </td>
+              <td>{{ i.priority }}</td>
+              <td>{{ i.assigneeId || '—' }}</td>
+              <td>{{ i.updatedAt | date : 'short' }}</td>
+            </tr>
+            <tr *ngIf="issues().length === 0">
+              <td colspan="6" class="text-center py-3">No data</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer d-flex justify-content-between align-items-center">
+        <div>
+          Project: <span class="fw-semibold">{{ projectName() || '–' }}</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            [disabled]="page() === 0"
+            (click)="prev()"
+          >
+            Prev
+          </button>
+          <span class="small">Page {{ page() + 1 }} / {{ totalPages() || 1 }}</span>
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            [disabled]="page() + 1 >= (totalPages() || 1)"
+            (click)="next()"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="card shadow-sm mt-3" *ngIf="currentIssue() as det">
+      <div class="card-body">
+        <h5 class="mb-1">#{{ det.id }} {{ det.title }}</h5>
+        <div class="mb-2 text-muted">
+          {{ det.status }} • {{ det.priority }} • assignee: {{ det.assigneeId || '—' }} • updated:
+          {{ det.updatedAt | date : 'short' }}
+        </div>
+        <p>{{ det.description || '—' }}</p>
+        <h6 class="mt-4">Comments</h6>
+        <ul class="list-group mb-3">
+          <li class="list-group-item" *ngFor="let c of comments()">
+            <div class="small text-muted">
+              {{ c.createdAt | date : 'short' }} by {{ c.authorId }}
+            </div>
+            <div>{{ c.body }}</div>
+          </li>
+        </ul>
+        <div class="input-group">
+          <input class="form-control" [(ngModel)]="commentText" placeholder="Add a comment..." />
+          <button class="btn btn-primary" (click)="addComment()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Issue Modal -->
+    <div class="modal fade" id="issueModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <form class="modal-content" (ngSubmit)="createIssue()" #f="ngForm">
+          <div class="modal-header">
+            <h5 class="modal-title">New Issue</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-2">
+              <label class="form-label">Title</label>
+              <input class="form-control" required [(ngModel)]="form.title" name="title" />
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                [(ngModel)]="form.description"
+                name="desc"
+              ></textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Priority</label>
+              <select class="form-select" [(ngModel)]="form.priority" name="prio">
+                <option>LOW</option>
+                <option>MEDIUM</option>
+                <option>HIGH</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Assignee (user id)</label>
+              <input
+                class="form-control"
+                type="number"
+                [(ngModel)]="form.assigneeId"
+                name="assignee"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+            <button class="btn btn-primary" type="submit" [disabled]="!f.valid">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #needLogin>
+  <div class="container py-5 text-center">
+    <p class="lead">Sign in (top-right) to load data.</p>
+  </div>
+</ng-template>

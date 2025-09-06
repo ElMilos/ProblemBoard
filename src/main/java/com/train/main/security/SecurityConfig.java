@@ -1,4 +1,4 @@
-package com.train.main.configuration;
+package com.train.main.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
