@@ -3,5 +3,5 @@ import { Dashboard } from './dashboard/dashboard';
 
 export const routes: Routes = [
   { path: '', component: Dashboard },
-  // { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' }
 ];

@@ -2,11 +2,13 @@ package com.train.main.entieties;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "comments")
 public class Comment {
 
@@ -22,7 +24,7 @@ public class Comment {
     @JoinColumn(name = "author_id")
     private User user;
 
-    @Column(name = "text")
+    @Column(name = "body")
     private String description;
 
     @Column(name = "created_at")

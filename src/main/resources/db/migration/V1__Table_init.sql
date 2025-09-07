@@ -1,4 +1,4 @@
-CREATE TABLE users (
+CREATE TABLE public.users (
   id            SERIAL PRIMARY KEY,
   username      VARCHAR(64) UNIQUE NOT NULL,
   email         VARCHAR(120) UNIQUE NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE users (
   created_at    TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE projects (
+CREATE TABLE public.projects (
   id          SERIAL PRIMARY KEY,
   name        VARCHAR(120) NOT NULL,
   description TEXT,
@@ -22,7 +22,7 @@ DO $$ BEGIN
   CREATE TYPE issue_priority AS ENUM ('LOW','MEDIUM','HIGH');
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
-CREATE TABLE issues (
+CREATE TABLE public.issues (
   id          SERIAL PRIMARY KEY,
   project_id  INT NOT NULL REFERENCES projects(id),
   title       VARCHAR(200) NOT NULL,
@@ -34,11 +34,11 @@ CREATE TABLE issues (
   updated_at  TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE comments (
+CREATE TABLE public.comments (
   id         SERIAL PRIMARY KEY,
   issue_id   INT NOT NULL REFERENCES issues(id) ON DELETE CASCADE,
   author_id  INT NOT NULL REFERENCES users(id),
-  body       TEXT NOT NULL,
+  text       TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
